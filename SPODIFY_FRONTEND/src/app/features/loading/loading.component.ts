@@ -28,20 +28,20 @@ export class LoadingComponent {
     light.castShadow = true; // cast shadow
     scene.add(light); // add light to scene
 
-    let lightAngle = 0;
-    const radius = 5;
+    let lightAngle = 0; // light rotation
+    const radius = 5; // radius of circular path for light rotation
 
     function animate() {
-      requestAnimationFrame(animate);
-      lightAngle += 0.01;
-      light.position.set(
-        1,
-        radius * Math.sin(lightAngle * 2),
-        radius * Math.cos(lightAngle * 2)
+      requestAnimationFrame(animate); // request call for the next frame
+      lightAngle -= 0.01; // move light along circular path
+      light.position.set( 
+        1, // light is rotating around the x axis counter clockwise
+        radius * Math.cos(lightAngle), // light is oscillating the y axis
+        radius * Math.sin(lightAngle) // light is oscillating the z axis
       );
-      renderer.render(scene, camera);
+      renderer.render(scene, camera); // render the scene from the perspective of the camera
     }
 
-    animate();
+    animate(); // start the animation
   }
 }
