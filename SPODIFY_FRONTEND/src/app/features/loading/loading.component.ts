@@ -14,29 +14,52 @@ export class LoadingComponent {
   ngAfterViewInit() {
     const canvas = this.canvas.nativeElement; // canvas native element reference
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 3;
-    const renderer = new THREE.WebGLRenderer({ canvas });
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.5, 1000);
+    camera.position.set(2, 2, 3);
+    camera.lookAt(0, 0, 0);
+    const renderer = new THREE.WebGLRenderer({ canvas});
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 
     const geometry = new THREE.SphereGeometry(1, 32, 32); // create sphere geometry
     const material = new THREE.MeshStandardMaterial({ color: 0xFF0000 }); // create sphere material to be red responsive to light
     const sphere = new THREE.Mesh(geometry, material); // create sphere
+    sphere.castShadow = true;
+    sphere.receiveShadow = true;
     scene.add(sphere); // add sphere to scene
 
+    const plateGeometry = new THREE.BoxGeometry(2, 0.1, 2); // create square plate geometry
+    const plateMaterial = new THREE.MeshStandardMaterial({ color: 0x00FFFF }); // create square material to be grey responsive to light
+    const plate = new THREE.Mesh(plateGeometry, plateMaterial);
+    plate.position.set(0, -1, 0); // position just below the sphere
+    plate.rotation.y = Math.PI / 2;
+    plate.receiveShadow = true;
+    plate.castShadow = true;
+    scene.add(plate);
+
     const light = new THREE.DirectionalLight(0xFFFFFF, 1); // create light
+    light.target = sphere;
     light.castShadow = true; // cast shadow
+    light.shadow.camera.left = -2;
+    light.shadow.camera.right = 2;
+    light.shadow.camera.top = 2;
+    light.shadow.camera.bottom = -2;
+    light.shadow.camera.near = 0;
+    light.shadow.camera.far = 10;
+
     scene.add(light); // add light to scene
 
     let lightAngle = 0; // light rotation
-    const radius = 5; // radius of circular path for light rotation
+    const radius = 2; // radius of circular path for light rotation
 
     function animate() {
       requestAnimationFrame(animate); // request call for the next frame
-      lightAngle -= 0.01; // move light along circular path
-      light.position.set( 
-        1, // light is rotating around the x axis counter clockwise
-        radius * Math.cos(lightAngle), // light is oscillating the y axis
+      lightAngle += 0.01; // move light along circular path
+      light.position.set(
+       0,// light is rotating around the x axis counter clockwise
+       radius * Math.cos(lightAngle), // light is oscillating the y axis
         radius * Math.sin(lightAngle) // light is oscillating the z axis
       );
       renderer.render(scene, camera); // render the scene from the perspective of the camera
