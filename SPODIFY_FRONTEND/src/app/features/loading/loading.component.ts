@@ -25,11 +25,23 @@ export class LoadingComponent {
     scene.add(sphere); // add sphere to scene
 
     const light = new THREE.DirectionalLight(0xFFFFFF, 1); // create light
-    light.position.set(1, 1, -0.5); // set light position to be behind the sphere
     light.castShadow = true; // cast shadow
     scene.add(light); // add light to scene
 
-    renderer.render(scene, camera); // render scene with camera
+    let lightAngle = 0;
+    const radius = 5;
 
+    function animate() {
+      requestAnimationFrame(animate);
+      lightAngle += 0.01;
+      light.position.set(
+        1,
+        radius * Math.sin(lightAngle * 2),
+        radius * Math.cos(lightAngle * 2)
+      );
+      renderer.render(scene, camera);
+    }
+
+    animate();
   }
 }
