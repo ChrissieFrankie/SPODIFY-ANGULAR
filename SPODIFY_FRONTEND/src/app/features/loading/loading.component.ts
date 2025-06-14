@@ -15,13 +15,12 @@ export class LoadingComponent {
     const canvas = this.canvas.nativeElement; // canvas native element reference
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.5, 1000);
-    camera.position.set(2, 2, 3);
-    camera.lookAt(0, 0, 0);
+    camera.position.set(2, 2, 2); // set position directly above
+    camera.lookAt(0, 0, 0); // look at the center of the sphere
     const renderer = new THREE.WebGLRenderer({ canvas});
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.enabled = true; // make it look more realistic
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
 
     const geometry = new THREE.SphereGeometry(1, 32, 32); // create sphere geometry
     const material = new THREE.MeshStandardMaterial({ color: 0xFF0000 }); // create sphere material to be red responsive to light
@@ -31,28 +30,26 @@ export class LoadingComponent {
     scene.add(sphere); // add sphere to scene
 
     const plateGeometry = new THREE.BoxGeometry(2, 0.1, 2); // create square plate geometry
-    const plateMaterial = new THREE.MeshStandardMaterial({ color: 0x00FFFF }); // create square material to be grey responsive to light
+    const plateMaterial = new THREE.MeshStandardMaterial({ color: 0x696969 }); // fifty shades of grey reference lol
     const plate = new THREE.Mesh(plateGeometry, plateMaterial);
     plate.position.set(0, -1, 0); // position just below the sphere
-    plate.rotation.y = Math.PI / 2;
+    plate.rotation.y = Math.PI / 2; // rotate the plate 90 degrees
     plate.receiveShadow = true;
     plate.castShadow = true;
     scene.add(plate);
 
     const light = new THREE.DirectionalLight(0xFFFFFF, 1); // create light
-    light.target = sphere;
+    light.target = sphere; // aim the light at the sphere
     light.castShadow = true; // cast shadow
-    light.shadow.camera.left = -2;
-    light.shadow.camera.right = 2;
-    light.shadow.camera.top = 2;
-    light.shadow.camera.bottom = -2;
-    light.shadow.camera.near = 0;
-    light.shadow.camera.far = 10;
+
+    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.1); // soft white ambient light
+    scene.add(ambientLight);
 
     scene.add(light); // add light to scene
 
     let lightAngle = 0; // light rotation
     const radius = 2; // radius of circular path for light rotation
+
 
     function animate() {
       requestAnimationFrame(animate); // request call for the next frame
