@@ -68,5 +68,13 @@ export class LoadingComponent {
 
     animate(); // start the animation
 
+    window.addEventListener('resize', onWindowResize); // listen for browser resizing
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight; // camera's aspect ratio match the browsers aspect ratio
+      camera.updateProjectionMatrix(); // recalculate projections with new aspect ratio
+      renderer.setSize(window.innerWidth, window.innerHeight); // update the renderer to match the browsers dimensions
+    }
+
   }
 }
