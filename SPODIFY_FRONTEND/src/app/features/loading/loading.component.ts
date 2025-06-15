@@ -29,12 +29,12 @@ export class LoadingComponent {
     sphere.receiveShadow = true;
     scene.add(sphere); // add sphere to scene
     const spotifySignalWaves = new THREE.TextureLoader().load('/SpotifySignalWaves.png'); // load the signal waves
-    const decalMaterial = new THREE.MeshStandardMaterial({map:spotifySignalWaves, transparent:true, depthTest:true, depthWrite:false, polygonOffset:true, polygonOffsetFactor:-4}); // material for transparent png
+    const decalMaterial = new THREE.MeshPhongMaterial({map:spotifySignalWaves, transparent:true, specular: 0x696969 }); // material for transparent png
     const decalPosition = new THREE.Vector3(0.8, 0.9, 1); // near the surface
     const decalOrientation = new THREE.Euler(Math.PI / -4, Math.PI / 6, Math.PI / 6); // position facing the user
-    const decalSize = new THREE.Vector3(1.75, 1.75, 1.75); // self explanatory
+    const decalSize = new THREE.Vector3(1.7, 1.7, 1.7); // self explanatory
     const decalGeometry = new DecalGeometry(sphere, decalPosition, decalOrientation, decalSize); // create decal geometry
-    const decalMesh = new THREE.Mesh(decalGeometry, decalMaterial); // create the decal meth
+    const decalMesh = new THREE.Mesh(decalGeometry, decalMaterial); // create the decal mesh
     scene.add(decalMesh);
     const plateGeometry = new THREE.BoxGeometry(2, 0.1, 2); // create square plate geometry
     const plateMaterial = new THREE.MeshPhongMaterial({ color: 0x696969 }); // fifty shades of grey lol
