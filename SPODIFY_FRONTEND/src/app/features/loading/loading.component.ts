@@ -23,14 +23,14 @@ export class LoadingComponent {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     const geometry = new THREE.SphereGeometry(1, 32, 32); // create sphere geometry
-    const material = new THREE.MeshStandardMaterial({ color: 0xFF0000 }); // create sphere material to be red responsive to light
+    const material = new THREE.MeshPhongMaterial({ color: 0x1DB954, specular:0x696969}); // create sphere material to be red responsive to light
     const sphere = new THREE.Mesh(geometry, material); // create sphere
     sphere.castShadow = true;
     sphere.receiveShadow = true;
     scene.add(sphere); // add sphere to scene
 
     const plateGeometry = new THREE.BoxGeometry(2, 0.1, 2); // create square plate geometry
-    const plateMaterial = new THREE.MeshStandardMaterial({ color: 0x696969 }); // fifty shades of grey reference lol
+    const plateMaterial = new THREE.MeshPhongMaterial({ color: 0x696969}); // fifty shades of grey lol
     const plate = new THREE.Mesh(plateGeometry, plateMaterial);
     plate.position.set(0, -1, 0); // position just below the sphere
     plate.rotation.y = Math.PI / 2; // rotate the plate 90 degrees
