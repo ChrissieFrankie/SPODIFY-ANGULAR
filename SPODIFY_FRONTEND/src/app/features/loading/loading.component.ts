@@ -1,3 +1,4 @@
+import { DecalGeometry } from 'three/examples/jsm/geometries/DecalGeometry.js';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import * as THREE from 'three';
 
@@ -21,14 +22,20 @@ export class LoadingComponent {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true; // make it look more realistic
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
     const geometry = new THREE.SphereGeometry(1, 32, 32); // create sphere geometry
     const material = new THREE.MeshPhongMaterial({ color: 0x1DB954, specular: 0x696969 }); // create sphere material to be green responsive to light
     const sphere = new THREE.Mesh(geometry, material); // create sphere
     sphere.castShadow = true;
     sphere.receiveShadow = true;
     scene.add(sphere); // add sphere to scene
-
+    const spotifySignalWaves = new THREE.TextureLoader().load('/SpotifySignalWaves.png'); // load the signal waves
+    const decalMaterial = new THREE.MeshStandardMaterial({map:spotifySignalWaves, transparent:true, depthTest:true, depthWrite:false, polygonOffset:true, polygonOffsetFactor:-4}); // material for transparent png
+    const decalPosition = new THREE.Vector3(0.8, 0.9, 1); // near the surface
+    const decalOrientation = new THREE.Euler(Math.PI / -4, Math.PI / 6, Math.PI / 6); // position facing the user
+    const decalSize = new THREE.Vector3(1.75, 1.75, 1.75); // self explanatory
+    const decalGeometry = new DecalGeometry(sphere, decalPosition, decalOrientation, decalSize); // create decal geometry
+    const decalMesh = new THREE.Mesh(decalGeometry, decalMaterial); // create the decal meth
+    scene.add(decalMesh);
     const plateGeometry = new THREE.BoxGeometry(2, 0.1, 2); // create square plate geometry
     const plateMaterial = new THREE.MeshPhongMaterial({ color: 0x696969 }); // fifty shades of grey lol
     const plate = new THREE.Mesh(plateGeometry, plateMaterial);
@@ -37,21 +44,15 @@ export class LoadingComponent {
     plate.receiveShadow = true;
     plate.castShadow = true;
     scene.add(plate);
-
     const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1); // create light
     directionalLight.target = sphere; // aim the light at the sphere
     directionalLight.castShadow = true; // cast shadow
-
     const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.1); // soft white ambient light
     scene.add(ambientLight);
-
     scene.add(directionalLight); // add light to scene
-
     let angle = 0; // light rotation
     const radius = 2; // radius of circular path for light rotation
-
     let yRotation = 0; // plate rotation
-
     function animate() {
       requestAnimationFrame(animate); // request call for the next frame
       angle += 0.01; // move light along circular path
@@ -60,21 +61,16 @@ export class LoadingComponent {
         radius * Math.cos(angle), // light is oscillating the y axis
         radius * Math.sin(angle) // light is oscillating the z axis
       );
-
       yRotation += 0.01; // increase the y rotation
       plate.rotation.y = angle; // rotate the plate 
       renderer.render(scene, camera); // render the scene from the perspective of the camera
     }
-
     animate(); // start the animation
-
     window.addEventListener('resize', onWindowResize); // listen for browser resizing
-
     function onWindowResize() {
       camera.aspect = window.innerWidth / window.innerHeight; // camera's aspect ratio match the browsers aspect ratio
       camera.updateProjectionMatrix(); // recalculate projections with new aspect ratio
       renderer.setSize(window.innerWidth, window.innerHeight); // update the renderer to match the browsers dimensions
     }
-
   }
 }
