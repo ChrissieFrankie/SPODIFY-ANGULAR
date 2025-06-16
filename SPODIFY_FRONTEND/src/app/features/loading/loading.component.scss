@@ -1,6 +1,33 @@
 canvas {
-    width: 100vw;
-    height: 100vh;
-    display: block;
-    background: #000;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  background: #000;
+}
+
+h1 {
+  position: absolute;
+  &.test {
+    color: transparent;
+  }
+
+  &.production {
+    color: white;
+    font-family: "Segoe UI", sans-serif;
+    &.title {    
+      height: 10vh;
+      font-size: 7vh;
+      width: 15vw;
+      left: 42.5vw;
+      top: 3vh;
+    }
+
+    &.designer {
+      height: 8vh;
+      font-size: 5vh;
+      width: 34vw;
+      left: 33vw;
+      top: 87vh;
+    }
+  }
 }
