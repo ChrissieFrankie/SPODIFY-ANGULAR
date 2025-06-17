@@ -141,6 +141,21 @@ export class SearchUsernameComponent {
     searchFrameMesh.castShadow = true;
     searchFrameMesh.receiveShadow = true;
     scene.add(searchFrameMesh);
+    // magnifying glass handle
+    const searchHandleGeometry: CylinderGeometry = new CylinderGeometry(
+      0.05,
+      0.05,
+      0.75
+    )
+    const searchHandleMaterial: MeshPhongMaterial = new MeshPhongMaterial({
+      color: 0xFFD700, // make the frame gold
+      specular: 0x696969
+    });
+    const searchHandleMesh:Mesh = new Mesh(
+      searchHandleGeometry, 
+      searchHandleMaterial
+    );
+    scene.add(searchHandleMesh);
     /**
      * THE ANIMATIONS
      */
@@ -177,6 +192,16 @@ export class SearchUsernameComponent {
         0, 
         angle, // have frame face the spotify sphere
         Math.PI / 2 // have frame stand upright
+      );
+      searchHandleMesh.position.set( // make the handle "hop" around the spotify sphere
+        1.5 * Math.sin(angle), // spin the handle around the spotify sphere
+        Math.abs(0.5 * Math.sin(angle * 3)) - 0.875, // move the handle up and down
+        1.5 * Math.cos(angle) // spin the handle around the spotify sphere
+      )
+      searchHandleMesh.rotation.set(
+        0, // handle stays put
+        angle, // have handle face the spotify sphere
+        0 // handle stays put
       );
     }
     animate(); // start the animation
