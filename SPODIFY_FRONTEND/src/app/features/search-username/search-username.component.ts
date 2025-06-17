@@ -15,6 +15,7 @@ import {
   BoxGeometry,
   DirectionalLight,
   AmbientLight,
+  CylinderGeometry,
 } from 'three';
 
 @Component({
@@ -28,6 +29,9 @@ export class SearchUsernameComponent {
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>; // canvas element reference
 
   ngAfterViewInit() {
+    /**
+     * THE THREE.js
+     */
     const canvas: HTMLCanvasElement = this.canvas.nativeElement; // canvas native element reference
     const scene: Scene = new Scene();
     const camera: PerspectiveCamera = new PerspectiveCamera(
@@ -42,6 +46,9 @@ export class SearchUsernameComponent {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true; // make it look more realistic
     renderer.shadowMap.type = PCFSoftShadowMap;
+    /**
+     * THE LOADING 3D MESHES
+     */
     const geometry: SphereGeometry = new SphereGeometry(1, 32, 32); // create sphere geometry
     const material: MeshPhongMaterial = new MeshPhongMaterial({
       color: 0x1db954,
@@ -93,8 +100,35 @@ export class SearchUsernameComponent {
     const ambientLight: AmbientLight = new AmbientLight(0xffffff, 0.1); // soft white ambient light
     scene.add(ambientLight);
     scene.add(directionalLight); // add light to scene
+    /**
+     * THE SEARCH 3D MESHES
+     */
+    const searchLensGeometry: CylinderGeometry = new CylinderGeometry(
+      0.75,
+      0.75,
+      0.1
+    );
+    const searchLensMaterial: MeshPhongMaterial = new MeshPhongMaterial({
+      color: 0xffffff,
+      specular: 0x696969,
+      transparent: true,
+      opacity: 0.5,
+    });
+    const searchLensMesh: Mesh = new Mesh(
+      searchLensGeometry,
+      searchLensMaterial
+    );
+    searchLensMesh.position.set(0, 1, 1);
+    searchLensMesh.rotation.set(Math.PI / 4, 0, Math.PI);
+    searchLensMesh.castShadow = true;
+    searchLensMesh.receiveShadow = true;
+    scene.add(searchLensMesh);
+    
+    /**
+     * THE ANIMATIONS
+     */
     let angle: number = 0; // light rotation
-    const radius: number = 2; // radius of circular path for light rotation
+    const radius: number = 10; // radius of circular path for light rotation
     let yRotation: number = 0; // plate rotation
     function animate() {
       requestAnimationFrame(animate); // request call for the next frame
@@ -105,8 +139,20 @@ export class SearchUsernameComponent {
         radius * Math.sin(angle) // light is oscillating the z axis
       );
       yRotation += 0.01; // increase the y rotation
-      plate.rotation.y = angle; // rotate the plate
       renderer.render(scene, camera); // render the scene from the perspective of the camera
+      /**
+       * SEARCH MAGNIFYING GLASS
+       */
+      searchLensMesh.position.set( // make the lens "hop" around the spotify sphere
+        1.5 * Math.sin(angle), // spin the lens around the spotify sphere
+        Math.abs(0.5 * Math.sin(angle * 3)), // move the lens up and down
+        1.5 * Math.cos(angle) // spin the lens around the spotify sphere
+      );
+      searchLensMesh.rotation.set(
+        0, 
+        angle + Math.PI / 2, // have lens face the spotify sphere
+        Math.PI / 2 // have lens stand upright
+      );
     }
     animate(); // start the animation
     window.addEventListener('resize', onWindowResize); // listen for browser resizing
