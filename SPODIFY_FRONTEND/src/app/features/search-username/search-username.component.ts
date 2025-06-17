@@ -16,6 +16,7 @@ import {
   DirectionalLight,
   AmbientLight,
   CylinderGeometry,
+  TorusGeometry,
 } from 'three';
 
 @Component({
@@ -103,10 +104,11 @@ export class SearchUsernameComponent {
     /**
      * THE SEARCH 3D MESHES
      */
+    // search lens
     const searchLensGeometry: CylinderGeometry = new CylinderGeometry(
       0.75,
       0.75,
-      0.1
+      0.05
     );
     const searchLensMaterial: MeshPhongMaterial = new MeshPhongMaterial({
       color: 0xffffff,
@@ -118,18 +120,32 @@ export class SearchUsernameComponent {
       searchLensGeometry,
       searchLensMaterial
     );
-    searchLensMesh.position.set(0, 1, 1);
-    searchLensMesh.rotation.set(Math.PI / 4, 0, Math.PI);
     searchLensMesh.castShadow = true;
     searchLensMesh.receiveShadow = true;
     scene.add(searchLensMesh);
-    
+    // search frame
+    const searchFrameGeometry: TorusGeometry = new TorusGeometry(
+      0.8,
+      0.07,
+      16,
+      100
+    )
+    const searchFrameMaterial: MeshPhongMaterial = new MeshPhongMaterial({
+      color: 0xD4AF37,
+      specular: 0x696969
+    });
+    const searchFrameMesh:Mesh = new Mesh(
+      searchFrameGeometry,
+      searchFrameMaterial
+    );
+    searchFrameMesh.castShadow = true;
+    searchFrameMesh.receiveShadow = true;
+    scene.add(searchFrameMesh);
     /**
      * THE ANIMATIONS
      */
     let angle: number = 0; // light rotation
     const radius: number = 10; // radius of circular path for light rotation
-    let yRotation: number = 0; // plate rotation
     function animate() {
       requestAnimationFrame(animate); // request call for the next frame
       angle += 0.01; // move light along circular path
@@ -138,7 +154,6 @@ export class SearchUsernameComponent {
         radius * Math.cos(angle), // light is oscillating the y axis
         radius * Math.sin(angle) // light is oscillating the z axis
       );
-      yRotation += 0.01; // increase the y rotation
       renderer.render(scene, camera); // render the scene from the perspective of the camera
       /**
        * SEARCH MAGNIFYING GLASS
@@ -152,6 +167,16 @@ export class SearchUsernameComponent {
         0, 
         angle + Math.PI / 2, // have lens face the spotify sphere
         Math.PI / 2 // have lens stand upright
+      );
+      searchFrameMesh.position.set( // make the frame "hop" around the spotify sphere
+        1.5 * Math.sin(angle), // spin the frame around the spotify sphere
+        Math.abs(0.5 * Math.sin(angle * 3)), // move the frame up and down
+        1.5 * Math.cos(angle) // spin the frame around the spotify sphere
+      )
+      searchFrameMesh.rotation.set(
+        0, 
+        angle, // have frame face the spotify sphere
+        Math.PI / 2 // have frame stand upright
       );
     }
     animate(); // start the animation
