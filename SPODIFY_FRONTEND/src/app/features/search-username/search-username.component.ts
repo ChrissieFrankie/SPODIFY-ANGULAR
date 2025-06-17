@@ -106,8 +106,8 @@ export class SearchUsernameComponent {
      */
     // search lens
     const searchLensGeometry: CylinderGeometry = new CylinderGeometry(
-      0.75,
-      0.75,
+      0.5,
+      0.5,
       0.05
     );
     const searchLensMaterial: MeshPhongMaterial = new MeshPhongMaterial({
@@ -125,8 +125,8 @@ export class SearchUsernameComponent {
     scene.add(searchLensMesh);
     // search frame
     const searchFrameGeometry: TorusGeometry = new TorusGeometry(
-      0.8,
-      0.07,
+      0.5,
+      0.05,
       16,
       100
     )
