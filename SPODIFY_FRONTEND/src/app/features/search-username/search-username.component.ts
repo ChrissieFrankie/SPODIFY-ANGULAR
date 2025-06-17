@@ -114,7 +114,7 @@ export class SearchUsernameComponent {
       color: 0xffffff,
       specular: 0x696969,
       transparent: true,
-      opacity: 0.5,
+      opacity: 0.5
     });
     const searchLensMesh: Mesh = new Mesh(
       searchLensGeometry,
@@ -131,7 +131,7 @@ export class SearchUsernameComponent {
       100
     )
     const searchFrameMaterial: MeshPhongMaterial = new MeshPhongMaterial({
-      color: 0xD4AF37,
+      color: 0xFFD700, // make the frame gold
       specular: 0x696969
     });
     const searchFrameMesh:Mesh = new Mesh(
