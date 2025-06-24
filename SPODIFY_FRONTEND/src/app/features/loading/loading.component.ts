@@ -29,16 +29,18 @@ export class LoadingComponent {
   ngAfterViewInit() {
     const canvas = document.getElementById('three-canvas') as HTMLCanvasElement; // get the app canva
     const scene: Scene = new Scene();
+    (window as any).threeScene = scene; // make the scene global
     const camera: PerspectiveCamera = new PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.5,
       1000
     );
-
+    (window as any).threeCamera = camera; // make the camera global
     camera.position.set(2, 2, 2); // set position directly above
     camera.lookAt(0, 0, 0); // look at the center of the sphere
     const renderer: WebGLRenderer = new WebGLRenderer({ canvas });
+    (window as any).threeRenderer = renderer; // make the camera global
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true; // make it look more realistic
     renderer.shadowMap.type = PCFSoftShadowMap;
