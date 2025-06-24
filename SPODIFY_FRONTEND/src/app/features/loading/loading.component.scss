@@ -17,10 +17,17 @@ h1 {
 
     &.designer {
       height: 8vh;
+      font-size: 2vh;
+      width: 16vw;
+      left: 43vw;
+      top: 15vh;
+    }
+
+    &.instructions {
       font-size: 5vh;
-      width: 40vw;
-      left: 30vw;
-      top: 85vh;
+      width: 33vw;
+      left: 33.5vw;
+      top: 86vh;
     }
   }
 }
