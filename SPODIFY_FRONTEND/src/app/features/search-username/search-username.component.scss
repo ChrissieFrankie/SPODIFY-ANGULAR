@@ -9,6 +9,7 @@ h1 {
     font-family: "Segoe UI", sans-serif;
 
     &.instructions {
+      display: none;
       height: 8vh;
       font-size: 4vh;
       width: 44vw;
