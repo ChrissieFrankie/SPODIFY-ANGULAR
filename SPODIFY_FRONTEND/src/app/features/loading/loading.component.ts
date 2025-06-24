@@ -25,10 +25,9 @@ import {
   styleUrl: './loading.component.scss',
 })
 export class LoadingComponent {
-  @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>; // canvas element reference
 
   ngAfterViewInit() {
-    const canvas: HTMLCanvasElement = this.canvas.nativeElement; // canvas native element reference
+    const canvas = document.getElementById('three-canvas') as HTMLCanvasElement; // get the app canva
     const scene: Scene = new Scene();
     const camera: PerspectiveCamera = new PerspectiveCamera(
       75,
@@ -36,6 +35,7 @@ export class LoadingComponent {
       0.5,
       1000
     );
+
     camera.position.set(2, 2, 2); // set position directly above
     camera.lookAt(0, 0, 0); // look at the center of the sphere
     const renderer: WebGLRenderer = new WebGLRenderer({ canvas });
