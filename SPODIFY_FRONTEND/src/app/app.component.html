@@ -1,4 +1,4 @@
 <canvas id="three-canvas"></canvas>
 <app-loading></app-loading>
-<app-search-username id="app-search-username"></app-search-username>
+<app-search-username *ngIf="showSearchUsername"></app-search-username>
 <router-outlet></router-outlet>
