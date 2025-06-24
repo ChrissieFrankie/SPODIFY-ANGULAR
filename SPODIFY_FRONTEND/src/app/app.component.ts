@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoadingComponent } from './features/loading/loading.component';
 import { SearchUsernameComponent } from './features/search-username/search-username.component';
@@ -15,6 +15,9 @@ export class AppComponent {
   title = 'SPODIFY_FRONTEND';
 
   ngAfterViewInit() {
+
+    (window as any).showSearchUsernameComponent = false // hide the search username component
+
     const canvas = document.getElementById('three-canvas') as HTMLCanvasElement; // get the app canva
     const scene: Scene = new Scene();
     (window as any).threeScene = scene; // make the scene global
@@ -39,6 +42,14 @@ export class AppComponent {
       camera.aspect = window.innerWidth / window.innerHeight; // camera's aspect ratio match the browsers aspect ratio
       camera.updateProjectionMatrix(); // recalculate projections with new aspect ratio
       renderer.setSize(window.innerWidth, window.innerHeight); // update the renderer to match the browsers dimensions
+    }
+  }
+
+  @HostListener('window:keydown.enter', ['$event']) // listen for enter key press globally
+  handleEnter() { // handler for show search username component
+    if (!(window as any).showSearchUsernameComponent)
+    {
+      (window as any).showSearchUsernameComponent = true
     }
   }
 }
