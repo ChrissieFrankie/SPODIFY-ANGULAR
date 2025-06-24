@@ -23,11 +23,25 @@ export class SearchUsernameComponent {
       const camera: PerspectiveCamera = (window as any).threeCamera;
       const renderer: WebGLRenderer = (window as any).threeRenderer;
 
-      if (!scene || !camera || !renderer) {
+      if (!scene || !camera || !renderer || !(window as any).showSearchUsernameComponent) { // show the search username component until the user presses enter
         console.warn('Waiting for Three.js globals...');
         requestAnimationFrame(waitForScene);
         return;
       }
+
+      const loadingComponentInstructions: HTMLCollectionOf<Element> = document.getElementsByClassName("production instructions loading");
+      for (let i = 0; i < loadingComponentInstructions.length; i++) { // remove the instruction from loading component
+          const instruction = loadingComponentInstructions[i];
+          instruction.remove();
+        }
+
+        const searchUsernameComponentInstructions: HTMLCollectionOf<Element> = document.getElementsByClassName("production instructions search username");
+        for (let i = 0; i < searchUsernameComponentInstructions.length; i++) { // show the instruction from search username component
+            const instruction = searchUsernameComponentInstructions[i] as HTMLElement;
+            instruction.style.display = 'block';
+          }
+
+       
       
       // search lens
       const searchLensGeometry: CylinderGeometry = new CylinderGeometry(
