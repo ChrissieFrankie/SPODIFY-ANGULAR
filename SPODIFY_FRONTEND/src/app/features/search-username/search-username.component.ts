@@ -166,9 +166,9 @@ export class SearchUsernameComponent {
           
           updateMagnifyingLensTextTexture(pastedText);
           
-          console.log('Pasted:', pastedText);
+
         } catch (err) {
-          console.log('Paste failed - clipboard access denied');
+          updateMagnifyingLensTextTexture("Paste failed!");
         }
       });
       
