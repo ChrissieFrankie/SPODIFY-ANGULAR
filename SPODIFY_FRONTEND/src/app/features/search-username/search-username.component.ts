@@ -114,7 +114,7 @@ export class SearchUsernameComponent {
       // search bar
       let searchStarted: Boolean = false;
 
-      function createMagnifyingLensTextTexture() { // create a basic text texture
+      function createMagnifyingLensTextTexture(text: string) { // create a basic text texture
 
         const canvas = document.createElement('canvas'); // canvas exclusively for text
         canvas.width = 256;
@@ -127,16 +127,28 @@ export class SearchUsernameComponent {
         ctx.fillStyle = 'black'; // black text
         ctx.font = '16px Segoe UI'; // font
         ctx.textAlign = 'center'; 
-        ctx.fillText('Hello, World!', 128, 20); // text
+        ctx.fillText(text, 128, 20); // text
 
         return new CanvasTexture(canvas);
       }
 
-      const magnifyingLensTextTexture = createMagnifyingLensTextTexture();  // create the texture
+     
+
+      const magnifyingLensTextTexture = createMagnifyingLensTextTexture("Hello, World!");  // create the texture
       const magnifyingLensTextMaterial = new MeshBasicMaterial({ // create the texture on the material
         map: magnifyingLensTextTexture,
         transparent: true,
       });
+
+      function updateMagnifyingLensTextTexture(text: string) {
+        if (magnifyingLensTextMaterial.map)
+        {
+          magnifyingLensTextMaterial.map.dispose();
+          magnifyingLensTextMaterial.map = createMagnifyingLensTextTexture(text);
+        }
+
+      }
+
       const magnifyingLensTextGeometry = new PlaneGeometry(0.9, 0.3); // create the geometry for the text material
       const magnifyingLensTextMesh = new Mesh(magnifyingLensTextGeometry, magnifyingLensTextMaterial); // bake the mesh
       magnifyingLensTextMesh.position.y = 0.03; // update the mesh frame for the text to be upright
@@ -145,7 +157,7 @@ export class SearchUsernameComponent {
 
       searchLensMesh.add(magnifyingLensTextMesh);
 
-
+      updateMagnifyingLensTextTexture("Paste your username here!");
 
       /**
        * THE ANIMATIONS
