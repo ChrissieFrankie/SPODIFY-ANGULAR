@@ -23,26 +23,38 @@ export class SearchUsernameComponent {
       const camera: PerspectiveCamera = (window as any).threeCamera;
       const renderer: WebGLRenderer = (window as any).threeRenderer;
 
-      if (!scene || !camera || !renderer || !(window as any).showSearchUsernameComponent) { // show the search username component until the user presses enter
+      if (
+        !scene ||
+        !camera ||
+        !renderer ||
+        !(window as any).showSearchUsernameComponent
+      ) {
+        // show the search username component until the user presses enter
         console.warn('Waiting for Three.js globals...');
         requestAnimationFrame(waitForScene);
         return;
       }
 
-      const loadingComponentInstructions: HTMLCollectionOf<Element> = document.getElementsByClassName("production instructions loading");
-      for (let i = 0; i < loadingComponentInstructions.length; i++) { // remove the instruction from loading component
-          const instruction = loadingComponentInstructions[i];
-          instruction.remove();
-        }
+      const loadingComponentInstructions: HTMLCollectionOf<Element> =
+        document.getElementsByClassName('production instructions loading');
+      for (let i = 0; i < loadingComponentInstructions.length; i++) {
+        // remove the instruction from loading component
+        const instruction = loadingComponentInstructions[i];
+        instruction.remove();
+      }
 
-        const searchUsernameComponentInstructions: HTMLCollectionOf<Element> = document.getElementsByClassName("production instructions search username");
-        for (let i = 0; i < searchUsernameComponentInstructions.length; i++) { // show the instruction from search username component
-            const instruction = searchUsernameComponentInstructions[i] as HTMLElement;
-            instruction.style.display = 'block';
-          }
+      const searchUsernameComponentInstructions: HTMLCollectionOf<Element> =
+        document.getElementsByClassName(
+          'production instructions search username'
+        );
+      for (let i = 0; i < searchUsernameComponentInstructions.length; i++) {
+        // show the instruction from search username component
+        const instruction = searchUsernameComponentInstructions[
+          i
+        ] as HTMLElement;
+        instruction.style.display = 'block';
+      }
 
-       
-      
       // search lens
       const searchLensGeometry: CylinderGeometry = new CylinderGeometry(
         0.5,
@@ -95,17 +107,16 @@ export class SearchUsernameComponent {
         searchHandleMaterial
       );
       scene.add(searchHandleMesh);
+
+      // search bar
+      let searchStarted: Boolean = false;
+
       /**
        * THE ANIMATIONS
        */
-      let angle: number = 0; // light rotation
-      function animate() {
-        requestAnimationFrame(animate); // request call for the next frame
-        angle -= 0.01; // move light along circular path
-        renderer.render(scene, camera); // render the scene from the perspective of the camera
-        /**
-         * SEARCH MAGNIFYING GLASS
-         */
+      let angle: number = 0.78; // light rotation
+
+      function updateMagnifyingGlassFrame(angle: number) {
         searchLensMesh.position.set(
           // make the lens "hop" around the spotify sphere
           1.5 * Math.sin(angle), // spin the lens around the spotify sphere
@@ -140,6 +151,18 @@ export class SearchUsernameComponent {
           0 // handle stays put
         );
       }
+      function animate() {
+        requestAnimationFrame(animate); // request call for the next frame
+        renderer.render(scene, camera); // render the scene from the perspective of the camera
+        /**
+         * SEARCH MAGNIFYING GLASS
+         */
+        if (searchStarted) {
+          angle -= 0.01; // move light along circular path
+          updateMagnifyingGlassFrame(angle);
+        }
+      }
+      updateMagnifyingGlassFrame(angle);
       animate(); // start the animation
     };
     waitForScene();
