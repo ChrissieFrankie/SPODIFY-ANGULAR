@@ -159,6 +159,22 @@ export class SearchUsernameComponent {
 
       updateMagnifyingLensTextTexture("Paste your username here!");
 
+      document.addEventListener('paste', async (e) => { // receive paste events
+        e.preventDefault();
+        try {
+          const pastedText = await navigator.clipboard.readText();
+          
+          updateMagnifyingLensTextTexture(pastedText);
+          
+          console.log('Pasted:', pastedText);
+        } catch (err) {
+          console.log('Paste failed - clipboard access denied');
+        }
+      });
+      
+      renderer.domElement.tabIndex = 0; // make canvas focusable
+      renderer.domElement.focus(); // give it focus
+
       /**
        * THE ANIMATIONS
        */
