@@ -7,6 +7,9 @@ import {
   Mesh,
   CylinderGeometry,
   TorusGeometry,
+  MeshBasicMaterial,
+  PlaneGeometry,
+  CanvasTexture,
 } from 'three';
 
 @Component({
@@ -110,6 +113,39 @@ export class SearchUsernameComponent {
 
       // search bar
       let searchStarted: Boolean = false;
+
+      function createMagnifyingLensTextTexture() { // create a basic text texture
+
+        const canvas = document.createElement('canvas'); // canvas exclusively for text
+        canvas.width = 256;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d'); // 2d rendering
+        if (!ctx) { // just in case
+          console.error('Could not load 2D context');
+          return null;
+        }
+        ctx.fillStyle = 'black'; // black text
+        ctx.font = '16px Segoe UI'; // font
+        ctx.textAlign = 'center'; 
+        ctx.fillText('Hello, World!', 128, 20); // text
+
+        return new CanvasTexture(canvas);
+      }
+
+      const magnifyingLensTextTexture = createMagnifyingLensTextTexture();  // create the texture
+      const magnifyingLensTextMaterial = new MeshBasicMaterial({ // create the texture on the material
+        map: magnifyingLensTextTexture,
+        transparent: true,
+      });
+      const magnifyingLensTextGeometry = new PlaneGeometry(0.9, 0.3); // create the geometry for the text material
+      const magnifyingLensTextMesh = new Mesh(magnifyingLensTextGeometry, magnifyingLensTextMaterial); // bake the mesh
+      magnifyingLensTextMesh.position.y = 0.03; // update the mesh frame for the text to be upright
+      magnifyingLensTextMesh.rotation.x = -Math.PI / 2;
+      magnifyingLensTextMesh.rotation.z = -Math.PI / 2;
+
+      searchLensMesh.add(magnifyingLensTextMesh);
+
+
 
       /**
        * THE ANIMATIONS
