@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoadingComponent } from './features/loading/loading.component';
 import { SearchUsernameComponent } from './features/search-username/search-username.component';
