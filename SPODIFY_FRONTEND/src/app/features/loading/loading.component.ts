@@ -1,5 +1,5 @@
 import { DecalGeometry } from 'three/examples/jsm/geometries/DecalGeometry.js';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import {
   Texture,
   Scene,
@@ -24,18 +24,23 @@ import {
   styleUrl: './loading.component.scss',
 })
 export class LoadingComponent {
+
+  constructor() {
+    (window as any).isLoadingIntro = true;
+  }
+
   ngAfterViewInit() {
-    const waitForScene = () => {
+    const waitForGlobals = () => {
       const scene: Scene = (window as any).threeScene;
       const camera: PerspectiveCamera = (window as any).threeCamera;
       const renderer: WebGLRenderer = (window as any).threeRenderer;
-      
-      if (!scene || !camera || !renderer) {
-        console.warn('Waiting for Three.js globals...');
-        requestAnimationFrame(waitForScene);
+
+      if (!scene || !camera || !renderer) { // wait for the scene, camera, and renderer to be defined
+        console.warn('LoadingComponent: Waiting for Three.js globals...');
+        requestAnimationFrame(waitForGlobals);
         return;
       }
-      
+
       const geometry: SphereGeometry = new SphereGeometry(1, 32, 32); // create sphere geometry
       const material: MeshPhongMaterial = new MeshPhongMaterial({
         color: 0x1db954,
@@ -104,6 +109,11 @@ export class LoadingComponent {
       }
       animate(); // start the animation
     };
-    waitForScene();
+    waitForGlobals();
+  }
+
+  @HostListener('document:keydown.enter', ['$event']) // listen for enter key
+  toggleLoading(_: KeyboardEvent) {
+    (window as any).isLoadingIntro = false; // no longer loading intro
   }
 }
