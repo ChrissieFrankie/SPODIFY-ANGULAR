@@ -21,41 +21,30 @@ import {
 })
 export class SearchUsernameComponent {
   ngAfterViewInit() {
-    const waitForScene = () => {
+    const waitForGlobals = () => {
       const scene: Scene = (window as any).threeScene;
       const camera: PerspectiveCamera = (window as any).threeCamera;
       const renderer: WebGLRenderer = (window as any).threeRenderer;
 
-      if (
-        !scene ||
-        !camera ||
-        !renderer ||
-        !(window as any).showSearchUsernameComponent
-      ) {
+      if (!scene || !camera || !renderer || (window as any).isLoadingIntro) {
         // show the search username component until the user presses enter
-        console.warn('Waiting for Three.js globals...');
-        requestAnimationFrame(waitForScene);
+        console.warn(
+          'SearchUsernameComponent: Waiting for Three.js globals...'
+        );
+        requestAnimationFrame(waitForGlobals);
         return;
       }
 
-      const loadingComponentInstructions: HTMLCollectionOf<Element> =
-        document.getElementsByClassName('production instructions loading');
-      for (let i = 0; i < loadingComponentInstructions.length; i++) {
-        // remove the instruction from loading component
-        const instruction = loadingComponentInstructions[i];
-        instruction.remove();
+      const loadingComponentInstructions: HTMLElement | null = // remove the loading component instructions
+        document.getElementById('loading-production-instructions');
+      if (loadingComponentInstructions) {
+        loadingComponentInstructions.remove();
       }
 
-      const searchUsernameComponentInstructions: HTMLCollectionOf<Element> =
-        document.getElementsByClassName(
-          'production instructions search username'
-        );
-      for (let i = 0; i < searchUsernameComponentInstructions.length; i++) {
-        // show the instruction from search username component
-        const instruction = searchUsernameComponentInstructions[
-          i
-        ] as HTMLElement;
-        instruction.style.display = 'block';
+      const searchUsernameComponentInstructions: HTMLElement | null = // show the instruction from search username component
+        document.getElementById('search-username-production-instructions');
+      if (searchUsernameComponentInstructions) {
+        searchUsernameComponentInstructions.style.display = 'block';
       }
 
       // search lens
@@ -114,64 +103,67 @@ export class SearchUsernameComponent {
       // search bar
       let searchStarted: Boolean = false;
 
-      function createMagnifyingLensTextTexture(text: string) { // create a basic text texture
+      function createMagnifyingLensTextTexture(text: string) {
+        // create a basic text texture
 
         const canvas = document.createElement('canvas'); // canvas exclusively for text
         canvas.width = 256;
         canvas.height = 64;
         const ctx = canvas.getContext('2d'); // 2d rendering
-        if (!ctx) { // just in case
+        if (!ctx) {
+          // just in case
           console.error('Could not load 2D context');
           return null;
         }
         ctx.fillStyle = 'black'; // black text
         ctx.font = '16px Segoe UI'; // font
-        ctx.textAlign = 'center'; 
+        ctx.textAlign = 'center';
         ctx.fillText(text, 128, 20); // text
 
         return new CanvasTexture(canvas);
       }
 
-     
-
-      const magnifyingLensTextTexture = createMagnifyingLensTextTexture("Hello, World!");  // create the texture
-      const magnifyingLensTextMaterial = new MeshBasicMaterial({ // create the texture on the material
+      const magnifyingLensTextTexture =
+        createMagnifyingLensTextTexture('Hello, World!'); // create the texture
+      const magnifyingLensTextMaterial = new MeshBasicMaterial({
+        // create the texture on the material
         map: magnifyingLensTextTexture,
         transparent: true,
       });
 
       function updateMagnifyingLensTextTexture(text: string) {
-        if (magnifyingLensTextMaterial.map)
-        {
+        if (magnifyingLensTextMaterial.map) {
           magnifyingLensTextMaterial.map.dispose();
-          magnifyingLensTextMaterial.map = createMagnifyingLensTextTexture(text);
+          magnifyingLensTextMaterial.map =
+            createMagnifyingLensTextTexture(text);
         }
-
       }
 
       const magnifyingLensTextGeometry = new PlaneGeometry(0.9, 0.3); // create the geometry for the text material
-      const magnifyingLensTextMesh = new Mesh(magnifyingLensTextGeometry, magnifyingLensTextMaterial); // bake the mesh
+      const magnifyingLensTextMesh = new Mesh(
+        magnifyingLensTextGeometry,
+        magnifyingLensTextMaterial
+      ); // bake the mesh
       magnifyingLensTextMesh.position.y = 0.03; // update the mesh frame for the text to be upright
       magnifyingLensTextMesh.rotation.x = -Math.PI / 2;
       magnifyingLensTextMesh.rotation.z = -Math.PI / 2;
 
       searchLensMesh.add(magnifyingLensTextMesh);
 
-      updateMagnifyingLensTextTexture("Paste your username here!");
+      updateMagnifyingLensTextTexture('Paste your username here!');
 
-      document.addEventListener('paste', async (e) => { // receive paste events
+      document.addEventListener('paste', async (e) => {
+        // receive paste events
         e.preventDefault();
         try {
           const pastedText = await navigator.clipboard.readText();
-          
-          updateMagnifyingLensTextTexture(pastedText);
-          
 
+          updateMagnifyingLensTextTexture(pastedText);
         } catch (err) {
-          updateMagnifyingLensTextTexture("Paste failed!");
+          updateMagnifyingLensTextTexture('Paste failed!');
         }
       });
-      
+
       renderer.domElement.tabIndex = 0; // make canvas focusable
       renderer.domElement.focus(); // give it focus
 
@@ -229,6 +221,6 @@ export class SearchUsernameComponent {
       updateMagnifyingGlassFrame(angle);
       animate(); // start the animation
     };
-    waitForScene();
+    waitForGlobals();
   }
 }
