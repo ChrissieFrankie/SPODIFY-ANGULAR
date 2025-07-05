@@ -1,0 +1,33 @@
+h1 {
+  position: absolute;
+  &.test {
+    color: transparent;
+  }
+
+  &.production {
+    color: white;
+    font-family: "Segoe UI", sans-serif;
+    &.title {    
+      height: 10vh;
+      font-size: 7vh;
+      width: 15vw;
+      left: 42.5vw;
+      top: 3vh;
+    }
+
+    &.designer {
+      height: 8vh;
+      font-size: 2vh;
+      width: 16vw;
+      left: 43vw;
+      top: 15vh;
+    }
+
+    &.instructions {
+      font-size: 5vh;
+      width: 33vw;
+      left: 33.5vw;
+      top: 86vh;
+    }
+  }
+}
