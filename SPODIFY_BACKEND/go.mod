@@ -1,0 +1,3 @@
+module SPODIFY_BACKEND
+
+go 1.24.4
