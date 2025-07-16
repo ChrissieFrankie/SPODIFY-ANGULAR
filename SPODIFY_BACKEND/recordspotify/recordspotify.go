@@ -106,3 +106,9 @@ func getUserPlaylists(accessToken, userID string) (map[string]string, error) {
 
 	return playlists, nil
 }
+
+func Capture(tokenData, userID string) map[string]map[string]TrackInfo { // return user playlists tracks
+	userIDPlaylists, _ := getUserPlaylists(tokenData, userID)
+	userIDPlaylistsTracks, _ := getAllPlaylistsTracks(tokenData, userIDPlaylists)
+	return userIDPlaylistsTracks
+}
