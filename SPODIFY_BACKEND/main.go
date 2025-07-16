@@ -1,11 +1,11 @@
 package main
 
 import (
-	"SPODIFY_BACKEND/accesstokenmanifestation"
+	accesstoken "SPODIFY_BACKEND/accesstoken"
 	"fmt"
 )
 
 func main() {
-	tokenData := accesstokenmanifestation.ManifestAccessToken()
+	tokenData := accesstoken.Manifest()
 	fmt.Println(tokenData.AccessToken)
 }
