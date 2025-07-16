@@ -1,4 +1,4 @@
-package accesstokenmanifestation
+package accesstoken
 
 import (
 	"context"
@@ -73,7 +73,7 @@ func saveLocalToken(token string, expiry time.Time) {
 	}
 }
 
-func ManifestAccessToken() TokenData {
+func Manifest() TokenData {
 	tokenData, err := loadLocalToken()                    // load local access token info into random access memory
 	if err != nil || time.Now().After(tokenData.Expiry) { // if an error occured or the token has expired
 		fmt.Println("Fetching new access token...")
