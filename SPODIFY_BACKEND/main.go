@@ -8,9 +8,9 @@ import (
 	"os"   // operating system
 	"time" // time management
 
-	"github.com/joho/godotenv" // loading .env
-	"github.com/zmb3/spotify"
-	"golang.org/x/oauth2/clientcredentials"
+	"github.com/joho/godotenv"              // loading .env
+	"github.com/zmb3/spotify"               // spotify API
+	"golang.org/x/oauth2/clientcredentials" // OAuth2 client credentials
 )
 
 type TokenData struct { // holds access token/expiry
@@ -44,7 +44,7 @@ func loadLocalCredentials() (string, string) { // return spotify client id and c
 	return spotifyClientID, spotifyClientSecret
 }
 
-func loadRemoteToken(clientID, clientSecret string) string {
+func loadRemoteToken(clientID, clientSecret string) (string, time.Time) {
 	config := &clientcredentials.Config{ // initialize OAuth2 client credentials
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
@@ -54,7 +54,7 @@ func loadRemoteToken(clientID, clientSecret string) string {
 	if err != nil {
 		log.Fatalf("Failed to get token: %v", err)
 	}
-	return token.AccessToken
+	return token.AccessToken, token.Expiry
 }
 
 func main() {
