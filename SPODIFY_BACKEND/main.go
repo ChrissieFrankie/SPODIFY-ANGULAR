@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json" // decoding json responses
 	"fmt"           // printing output
 	"log"
@@ -8,6 +9,8 @@ import (
 	"time" // time management
 
 	"github.com/joho/godotenv" // loading .env
+	"github.com/zmb3/spotify"
+	"golang.org/x/oauth2/clientcredentials"
 )
 
 type TokenData struct { // holds access token/expiry
@@ -41,12 +44,25 @@ func loadLocalCredentials() (string, string) { // return spotify client id and c
 	return spotifyClientID, spotifyClientSecret
 }
 
+func loadRemoteToken(clientID, clientSecret string) string {
+	config := &clientcredentials.Config{ // initialize OAuth2 client credentials
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		TokenURL:     spotify.TokenURL,
+	}
+	token, err := config.Token(context.Background()) // send HTTP Request for token
+	if err != nil {
+		log.Fatalf("Failed to get token: %v", err)
+	}
+	return token.AccessToken
+}
+
 func main() {
 	tokenData, err := loadLocalToken()                    // load local access token info into random access memory
 	if err != nil || time.Now().After(tokenData.Expiry) { // if an error occured or the token has expired
 		fmt.Println("Fetching new access token...")
 		loadDotEnv()
-		loadLocalCredentials()
+		fmt.Println(loadRemoteToken(loadLocalCredentials()))
 		// save the new token info
 	}
 }
