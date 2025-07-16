@@ -3,6 +3,7 @@ package recordspotify
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -11,6 +12,21 @@ type TrackInfo struct {
 	Name    string
 	Album   string
 	Artists []string
+}
+
+func getAllPlaylistsTracks(accessToken string, playlists map[string]string) (map[string]map[string]TrackInfo, error) {
+	result := make(map[string]map[string]TrackInfo) // initialize map
+
+	for playlistID := range playlists { // loop through playlists
+		tracks, err := getPlaylistTracks(accessToken, playlistID) // load tracks
+		if err != nil {
+			log.Printf("Failed to fetch tracks for playlist %s: %v", playlistID, err)
+			continue
+		}
+		result[playlistID] = tracks // record tracks
+	}
+
+	return result, nil
 }
 
 func getPlaylistTracks(accessToken, playlistID string) (map[string]TrackInfo, error) {
