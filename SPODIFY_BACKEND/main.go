@@ -57,12 +57,28 @@ func loadRemoteToken(clientID, clientSecret string) (string, time.Time) {
 	return token.AccessToken, token.Expiry
 }
 
+func saveLocalToken(token string, expiry time.Time) {
+	tokenFile := "token.json"       // JSON file path
+	tokenData := map[string]string{ // create JSON structure
+		"access_token": token,
+		"expiry":       expiry.Format(time.RFC3339), // format expiry
+	}
+	data, err := json.MarshalIndent(tokenData, "", "  ") // convert to formatted JSON
+	if err != nil {
+		log.Fatalf("Failed to marshal token to JSON: %v", err)
+	}
+	err = os.WriteFile(tokenFile, data, 0644) // write JSON to file
+	if err != nil {
+		log.Fatalf("Failed to save token to %s: %v", tokenFile, err)
+	}
+}
+
 func main() {
 	tokenData, err := loadLocalToken()                    // load local access token info into random access memory
 	if err != nil || time.Now().After(tokenData.Expiry) { // if an error occured or the token has expired
 		fmt.Println("Fetching new access token...")
 		loadDotEnv()
-		fmt.Println(loadRemoteToken(loadLocalCredentials()))
+		saveLocalToken(loadRemoteToken(loadLocalCredentials()))
 		// save the new token info
 	}
 }
