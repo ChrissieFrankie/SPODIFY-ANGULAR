@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { LoadingComponent } from './features/loading/loading.component';
+import { SearchUsernameComponent } from './features/search-username/search-username.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [AppComponent, LoadingComponent, SearchUsernameComponent],
     }).compileComponents();
   });
 
