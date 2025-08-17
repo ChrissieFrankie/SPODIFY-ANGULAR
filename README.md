@@ -68,4 +68,4 @@ For more information on using the Angular CLI, including detailed command refere
 
 # SPODIFYBACKEND
 
-none of your business
+the backend will be built in rust and the final build to download will be released on my website, still choosing a domain name
