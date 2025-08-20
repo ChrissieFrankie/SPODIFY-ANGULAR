@@ -1,3 +1,5 @@
+will be rewritten in React, Angular is too enterprise
+
 # SPODIFY
 
 - Spotify but without waiting for woke ads to end
