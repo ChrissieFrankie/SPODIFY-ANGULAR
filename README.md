@@ -1,10 +1,12 @@
+will be rewritten in React, Angular is too enterprise
+
 # SPODIFY
 
 - Spotify but without waiting for woke ads to end
 - Spotify but without paying a woke corporation
 - Spotify but with a D for Download
 
-most likely going to map the code from go to rust
+the final product will be an electron app with a react front end and rust backend because i know they will block the website
 
 # SPODIFYFRONTEND
 
