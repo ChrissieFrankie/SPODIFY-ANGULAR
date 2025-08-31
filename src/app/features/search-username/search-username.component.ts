@@ -166,14 +166,21 @@ export class SearchUsernameComponent {
         try {
           const pastedText = await navigator.clipboard.readText();
           
-          // Validate the pasted text as a Spotify user ID
+          // validate the pasted text as a spotify user id
           if (isValidSpotifyUserId(pastedText)) {
             updateMagnifyingLensTextTexture(pastedText);
-            searchStarted = true; // Start the spinning animation
+            searchStarted = true; // start the spinning animation
             console.log('Valid Spotify user ID detected, starting animation!');
+            
+            // update the instruction message when valid id is detected
+            const searchUsernameComponentInstructions: HTMLElement | null = 
+              document.getElementById('search-username-production-instructions');
+            if (searchUsernameComponentInstructions) {
+              searchUsernameComponentInstructions.textContent = 'Searching Through Spodify User';
+            }
           } else {
             updateMagnifyingLensTextTexture('Invalid ID format!');
-            searchStarted = false; // Stop animation if invalid
+            searchStarted = false; // stop animation if invalid
           }
         } catch (err) {
           updateMagnifyingLensTextTexture('Paste failed!');
