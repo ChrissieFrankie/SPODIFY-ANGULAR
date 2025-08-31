@@ -103,6 +103,14 @@ export class SearchUsernameComponent {
       // search bar
       let searchStarted: Boolean = false;
 
+      // spotify user id validation
+      function isValidSpotifyUserId(userId: string): boolean {
+        // spotify user ids are typically 28 characters long and contain alphanumeric characters
+        // format: base62 encoded string (alphanumeric, no special characters)
+        const spotifyUserIdRegex = /^[a-zA-Z0-9]{28}$/;
+        return spotifyUserIdRegex.test(userId.trim());
+      }
+
       function createMagnifyingLensTextTexture(text: string) {
         // create a basic text texture
 
@@ -157,15 +165,34 @@ export class SearchUsernameComponent {
         e.preventDefault();
         try {
           const pastedText = await navigator.clipboard.readText();
-
-          updateMagnifyingLensTextTexture(pastedText);
+          
+          // Validate the pasted text as a Spotify user ID
+          if (isValidSpotifyUserId(pastedText)) {
+            updateMagnifyingLensTextTexture(pastedText);
+            searchStarted = true; // Start the spinning animation
+            console.log('Valid Spotify user ID detected, starting animation!');
+          } else {
+            updateMagnifyingLensTextTexture('Invalid ID format!');
+            searchStarted = false; // Stop animation if invalid
+          }
         } catch (err) {
           updateMagnifyingLensTextTexture('Paste failed!');
+          searchStarted = false;
         }
       });
 
       renderer.domElement.tabIndex = 0; // make canvas focusable
       renderer.domElement.focus(); // give it focus
+
+      // Keyboard event handling
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && searchStarted) {
+          // User pressed Enter and has a valid ID - proceed to next step
+          console.log('Enter pressed with valid ID, proceeding...');
+          // TODO: Add your logic here to proceed to the next step
+          // For example: navigate to a new component, make API call, etc.
+        }
+      });
 
       /**
        * THE ANIMATIONS
