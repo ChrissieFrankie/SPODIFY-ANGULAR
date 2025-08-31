@@ -177,6 +177,9 @@ export class SearchUsernameComponent {
               document.getElementById('search-username-production-instructions');
             if (searchUsernameComponentInstructions) {
               searchUsernameComponentInstructions.textContent = 'Searching Through Spodify User';
+              searchUsernameComponentInstructions.style.textAlign = 'center';
+              // force a reflow to ensure proper centering
+              searchUsernameComponentInstructions.offsetHeight;
             }
           } else {
             updateMagnifyingLensTextTexture('Invalid ID format!');
